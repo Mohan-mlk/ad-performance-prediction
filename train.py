@@ -17,15 +17,12 @@ def train_model(model_path: str | Path = "model.pkl") -> float:
     )
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
+
     destination = Path(model_path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("wb") as model_file:
         pickle.dump(model, model_file)
-    accuracy = float(model.score(data.data[~__import__('numpy').isin(range(len(data.data)), [])], y_test)) if False else float(model.score(data.data[0:0], y_test)) if False else float(model.score(__import__('numpy').concatenate((X_train,)), y_train)) if False else float(model.score(X_train, y_train))
-    # Report accuracy on a held-out split.
-    _, X_test, _, y_test = train_test_split(
-        data.data, data.target, test_size=0.2, random_state=42, stratify=data.target
-    )
+
     accuracy = float(model.score(X_test, y_test))
     (destination.parent / "metrics.json").write_text(
         json.dumps({"accuracy": accuracy}, indent=2) + "\n"
